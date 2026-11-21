@@ -2,6 +2,17 @@
 title: "Introduction to Data Science"
 ---
 
+::: {.callout-note appearance="simple"}
+## Attribution and license
+
+These reading notes adapt material from Rafael A. Irizarry's [*Introduction to Data Science: Statistics and Prediction Algorithms Through Case Studies*](https://rafalab.dfci.harvard.edu/dsbook-part-2/), licensed under [Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+
+Changes by Austin Cortes: selected and condensed explanations, reorganized material, and added personal commentary and exercise answers. Exercise prompts and examples are drawn from the textbook; these are independent study notes, not an official or endorsed edition.
+
+The adapted textbook material and Austin Cortes's contributions to these reading notes are shared under the **same CC BY-NC-SA 4.0 license**, for noncommercial reuse with attribution and ShareAlike. No additional restrictions are imposed. Material is provided without warranties; see the [full license](https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.en). Separately credited third-party material retains its own terms.
+:::
+
+
 [Statistics and Prediction Algorithms Through Case Studies](https://rafalab.dfci.harvard.edu/dsbook-part-2/) — Rafael A. Irizarry
 
 - [Section 1: Summary Statistics](sec1_sumstats.qmd)

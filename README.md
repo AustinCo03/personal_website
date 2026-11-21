@@ -37,3 +37,7 @@ Official publishing guide: https://quarto.org/docs/publishing/github-pages.html
 - **training, ramblings, research papers:** their `index.qmd` pages currently contain only a title. Add text or links to future `.qmd` posts there.
 
 Run `quarto render` after changes, then publish the updated files.
+
+## Textbook licensing
+
+The Introduction to Data Science notes and their rendered pages carry source attribution, a change notice, and CC BY-NC-SA 4.0 terms. Keep these notices when adding or sharing notes. Use this material noncommercially, license adaptations under CC BY-NC-SA 4.0, and retain any separately supplied third-party credits or notices. Do not add paywalls, DRM, or terms restricting licensed reuse. Check each future book's license independently; the current notice only covers this book.
