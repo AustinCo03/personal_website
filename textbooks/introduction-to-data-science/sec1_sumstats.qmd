@@ -1,0 +1,254 @@
+---
+title: "Section 1: Summary Statistics"
+author: "Austin Cortes"
+format: html
+---
+
+# 1 - Distributions:
+<http://rafalab.dfci.harvard.edu/dsbook-part-2/summaries/distributions.html>
+
+```{r}
+library(dslabs)
+str(heights)
+```
+
+## 1.1 - Variable types
+
+- variables can be categorical or numeric
+  - categorical can be ordinal or not
+  - numeric can be discrete or continuous
+- there can be examples where technically discrete data are treated as continuous
+
+
+## 1.2 - Relative frequency distribution
+
+- 'dfn': **distribution** - the most basic statistical summary of a list of numbers or categories
+  - a compact description of how values are spread across observations.
+- 'dfn': **list** - a collection of observed values, such as a column in a dataset
+
+relative frequency example:
+```{r}
+prop.table(table(state.region))
+```
+
+## 1.3 - Empirical cumulative distribution functions
+
+- 'dfn': **empirical cdf** - Proportion of data points that are less than or equal to $a$.
+
+  - helps to quickly identify medians, ranges, and other important distributional       features
+
+## 1.4 - Histograms:
+
+- eCDF not commonly used in practice because it does not easily highlight key         distribution characteristics
+
+example:
+```{r}
+#| message: false
+#| warning: false
+library(tidyverse)
+heights |> filter(sex == "Male") |> 
+  mutate(height = round(height)) |>
+  count(height) |> mutate(f = n / sum(n)) |> 
+  ggplot(aes(height, f)) + geom_col()
+```
+
+We can also create a histogram using base R:
+```{r}
+with(heights, hist(height[sex == "Male"], breaks = c(50, 55, 60:80, 85)))
+```
+
+If we wanted to use `geom_histogram()`:
+```{r}
+heights |> filter(sex == "Male") |> ggplot(aes(x = height)) + 
+  geom_histogram(breaks = c(50, 55, 60:80, 85), color = "black")
+```
+
+If you wanted to display relative frequency:
+```{r}
+heights |> filter(sex == "Male") |> 
+  ggplot(aes(x = height, y = after_stat(density))) + 
+  geom_histogram(breaks = c(50, 55, 60:80, 85), color = "black")
+```
+
+- It is important to put genuine consideration into binwidth choice, taking into account important contextual information
+
+## 1.5 - Smoothed density plots
+
+- in practice, we tend to use histograms (with appropriate binwidths) and overlay a smooth curve
+
+- Similar to histograms, it it important to be conscious of the choice of bandwidth for the smooth curve
+
+- y-axis scaled so that the total area under the smooth curve equals 1
+
+## 1.6 - Describing distributions
+
+- dfn: **Mode** - A value or region where the data are most concentrated, the peak of a distribution
+
+- dfn: **Symmetric distribution** - has as many data points to both sides of the mode a distribution is *skewed* if it is asymmetric
+
+- dfn: **Tails of a distribution** - the regions that extent toward the smallest and largest values
+
+- dfn: **Right-skewed (positively skewed)** - has a long tail toward larger values
+
+- dfn: **Left-skewed (negatively skewed)** - has a longer tail toward smaller values
+
+## 1.7 - Visual to numerical summaries
+
+- graphical summaries are often complemented by numerical summaries
+
+## 1.8 - Exercises
+
+**Exercise 1** *In the `murders` dataset, the region is a categorical variable and the following is its distribution:*
+*To the closest 5%, what proportion of the states are in the North Central region?*
+
+**Answer:**
+The proportion of states that are in the North Central region is about 25%.
+
+
+**Exercise 2** *Which of the following is true:*
+
+a. The graph above is a histogram.
+
+b. The graph above shows only four numbers with a bar plot.
+
+c. Categories are not numbers, so it does not make sense to graph the distribution.
+
+d. The colors, not the height of the bars, describe the distribution.
+
+**Answer:**
+(b). Since the x-axis is categorical and not numeric, this is a bar chart, not a histogram. The graph describes the distributions of the regions with a number (proportion) for each region. Categorical variables can have distributions. Just no.
+
+
+**Exercise 3** *The plot below shows the eCDF for male heights:*
+*Based on the plot, what percentage of males are shorter than 75 inches?*
+
+a. 100%
+
+b. 95%
+
+c. 80%
+
+d. 72 inches
+
+**Answer:**
+(b) 95%.
+
+
+**Exercise 4** *To the closest inch, what height $m$ has the property that 1/2 of the male students are taller than $m$ and 1/2 are shorter?*
+
+a. 61 inches
+
+b. 64 inches
+
+c. 69 inches
+
+d. 74 inches
+
+**Answer:**
+(c) 69 inches.
+
+
+**Exercise 5** *Here is an eCDF of the murder rates (number of murders per 100,000 people) across states in 2010:*
+*Knowing that there are 51 observations (50 states and DC) and based on this plot, how many states have murder rates larger than 10 per 100,000 people?*
+
+a. 1
+
+b. 5
+
+c. 10
+
+d. 50
+
+**Answer:**
+(a) 1.
+
+
+**Exercise 6** *Based on the eCDF above, which of the following statements are true:*
+
+a. About half the states have murder rates above 7 per 100,000 and the other half below.
+
+b. Most states have murder rates below 2 per 100,000.
+
+c. All the states have murder rates above 2 per 100,000.
+
+d. With the exception of 4 states, the murder rates are below 5 per 100,000.
+
+**Answer:**
+(d) With the exception of 4 states, the murder rates are below 5 per 100,000.
+
+
+**Exercise 7** *Below is a histogram of male heights in our `heights` dataset:*
+*Based on this plot, how many males are between 63.5 and 65.5?*
+
+a. 10
+
+b. 24
+
+c. 47
+
+d. 100
+
+**Answer:**
+(c) 47.
+
+
+**Exercise 8** *About what percentage are shorter than 60 inches?*
+
+a. 1%
+
+b. 10%
+
+c. 25%
+
+d. 50%
+
+**Answer:**
+(a) 1%. Could look at the graph, could also run:
+```{r}
+library(dplyr)
+heights |> filter(sex == "Male") |> summarize(prop = mean(height < 60))
+```
+
+
+**Exercise 9** *Based on the density plot below, about what proportion of US states have populations larger than 10 million?*
+
+a. 0.02
+
+b. 0.15
+
+c. 0.50
+
+d. 0.55
+
+**Answer:**
+(b) 0.15.
+
+
+**Exercise 10** *Below are three density plots. Is it possible that they are from the same dataset?*
+*Which of the following statements is true:*
+
+a. It is impossible that they are from the same dataset.
+
+b. They are from the same dataset, but the plots are different due to coding errors.
+
+c. They are the same dataset, but the first and second plot under smooth and the third over smooths.
+
+d. They are the same dataset, but the first is not in the log scale, the second under smooths, and the third over smooths.
+
+**Answer:**
+(d) They are the same dataset, but the first is not in the log scale, the second under smooths, and the third oversmooths.
+
+
+
+# 2 - Numerical Summaries
+<http://rafalab.dfci.harvard.edu/dsbook-part-2/summaries/numerical-summaries.html>
+
+## 2.1 - The normal distribution
+
+
+
+
+
+
+
+

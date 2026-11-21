@@ -1,0 +1,49 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Austin Cortes"
+  search: false
+  navbar:
+    background: white
+    left:
+      - href: training/index.qmd
+        text: training
+      - href: leetcode/index.qmd
+        text: LeetCode
+      - href: textbooks/index.qmd
+        text: Textbooks
+      - href: ramblings/index.qmd
+        text: ramblings
+      - href: research-papers/index.qmd
+        text: research papers
+  sidebar:
+    - id: leetcode
+      title: LeetCode
+      style: docked
+      contents:
+        - leetcode/index.qmd
+        - leetcode/1_two_sum.qmd
+    - id: textbooks
+      title: Textbooks
+      style: docked
+      contents:
+        - textbooks/index.qmd
+        - section: "Introduction to Data Science"
+          href: textbooks/introduction-to-data-science/index.qmd
+          contents:
+            - textbooks/introduction-to-data-science/sec1_sumstats.qmd
+
+format:
+  html:
+    theme: cosmo
+    css: styles.css
+    toc: false
+    code-copy: true
+    anchor-sections: true
+
+execute:
+  freeze: auto
+  warning: false
+  message: false

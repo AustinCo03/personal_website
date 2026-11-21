@@ -1,0 +1,7 @@
+---
+title: "Introduction to Data Science"
+---
+
+[Statistics and Prediction Algorithms Through Case Studies](https://rafalab.dfci.harvard.edu/dsbook-part-2/) — Rafael A. Irizarry
+
+- [Section 1: Summary Statistics](sec1_sumstats.qmd)

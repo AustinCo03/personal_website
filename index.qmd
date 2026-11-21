@@ -1,0 +1,9 @@
+---
+title: "Austin Cortes"
+---
+
+- [training](training/index.qmd)
+- [LeetCode](leetcode/index.qmd)
+- [Textbooks](textbooks/index.qmd)
+- [ramblings](ramblings/index.qmd)
+- [research papers](research-papers/index.qmd)

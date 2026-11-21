@@ -1,0 +1,125 @@
+---
+title: "LeetCode 1 - Two Sum"
+author: "Austin Cortes"
+format: html
+---
+
+link: <https://leetcode.com/problems/two-sum/description/>
+
+**Note:** Original problem "translated" for an R solution using GPT-6.
+
+**Difficulty:** Easy
+
+## Problem Description
+
+You are given a numeric vector `nums` containing integers and a number `target`. Return the **indices of two elements whose sum equals `target`**.
+
+You may assume that:
+
+- Each input has **exactly one valid solution**.
+- You cannot use the same element twice.
+- You may return the indices in any order.
+- Indices should follow **R's 1-based indexing convention**.
+
+
+## Constraints
+
+- `2 <= length(nums) <= 10^4`
+- `-10^9 <= nums[i] <= 10^9`
+- `-10^9 <= target <= 10^9`
+- All elements of `nums` are whole numbers.
+- **Exactly one valid solution exists.**
+
+## Follow-up
+
+Can you develop an algorithm with a time complexity **better than** $O(n^2)$, where $n$ is the length of `nums`?
+
+## Solution
+
+**goal:** give an alg that gives correct indices
+
+**notes:** 
+
+- target - nums[index] will give what we need. 
+
+- what we need might not be in nums
+
+- making the vector tvec - nums (where tvec is a vector of length length(nums) of target)
+
+- should be linear time
+
+- Then, we have a vector of what we need
+
+- can use a nested for loop to see if num[i]'s complement is in tvec - nums (with i not equal j)
+
+*what if we sort before hand?*
+
+- can sort in O(nlogn)
+
+- then when we look for the complement, we can use binary search for it's complement.
+
+**idea:** sort nums. make a complement vector. For each i in complement (which will also be sorted), use binary search to see if it's complement is in the nums.
+
+```{r}
+# I've made a mergsort function, so I'm gonna use it
+library(sortedvector)
+
+two_sum <- function(nums, target) {
+  n <- length(nums)
+  sv <- sortedvector(nums)
+  num_sorted <- getVector(sv)
+  comp <- target - num_sorted
+  for (i in 1:n) {
+    temp <- findElement(sv, comp[i])
+    if (is.na(temp)) next
+    # for if both numbers are equal:
+    if (num_sorted[i] == comp[i]) {
+      indices <- which(nums == num_sorted[i])
+      if (length(indices) >= 2) {
+        return(indices[1:2])
+      }
+    } else {
+      # indices in the original vector:
+      index1 <- which(nums == num_sorted[i])[1]
+      index2 <- which(nums == comp[i])[1]
+      return(c(index1, index2))
+    }
+  }
+}
+
+# since we're assuming exactly one unique sol, we don't need to deal with "no sol" case
+```
+
+**Time complexity**
+
+- sorteVector uses an implementation of mergesort, so this step is $O(n\log n)$
+
+- making the target vector is $O(n)$
+
+- for loop is $O(n)$
+
+- binary search is $O(\log n)$ and happens at most $n$ times. So, in total, this step is no worse than $O(n\log n)$
+
+- finding the indexes is no worse than $O(n)$ for each
+
+Thus, worst case time complexity is $T(n) = O(n\log n)$.
+
+## Test Cases
+
+Use the following test cases to evaluate your implementation.
+
+```{r}
+#| eval: true
+
+# Test 1
+two_sum(c(2, 7, 11, 15), 9)
+# Expected: c(1, 2)
+
+# Test 2
+two_sum(c(3, 2, 4), 6)
+# Expected: c(2, 3)
+
+# Test 3
+two_sum(c(3, 3), 6)
+# Expected: c(1, 2)
+```

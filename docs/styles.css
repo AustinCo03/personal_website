@@ -1,0 +1,5 @@
+body { font-size: 1rem; }
+.navbar { border-bottom: 1px solid #ddd; }
+.navbar-brand { font-weight: 600; }
+h1 { font-size: 2rem; }
+a { text-underline-offset: 0.15em; }

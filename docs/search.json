@@ -1,0 +1,226 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Austin Cortes",
+    "section": "",
+    "text": "training\nLeetCode\nTextbooks\nramblings\nresearch papers"
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "http://rafalab.dfci.harvard.edu/dsbook-part-2/summaries/distributions.html\n\nlibrary(dslabs)\nstr(heights)\n\n'data.frame':   1050 obs. of  2 variables:\n $ sex   : Factor w/ 2 levels \"Female\",\"Male\": 2 2 2 2 2 1 1 1 1 2 ...\n $ height: num  75 70 68 74 61 65 66 62 66 67 ...\n\n\n\n\n\nvariables can be categorical or numeric\n\ncategorical can be ordinal or not\nnumeric can be discrete or continuous\n\nthere can be examples where technically discrete data are treated as continuous\n\n\n\n\n\n‘dfn’: distribution - the most basic statistical summary of a list of numbers or categories\n\na compact description of how values are spread across observations.\n\n‘dfn’: list - a collection of observed values, such as a column in a dataset\n\nrelative frequency example:\n\nprop.table(table(state.region))\n\nstate.region\n    Northeast         South North Central          West \n         0.18          0.32          0.24          0.26 \n\n\n\n\n\n\n‘dfn’: empirical cdf - Proportion of data points that are less than or equal to \\(a\\).\n\nhelps to quickly identify medians, ranges, and other important distributional features\n\n\n\n\n\n\neCDF not commonly used in practice because it does not easily highlight key distribution characteristics\n\nexample:\n\nlibrary(tidyverse)\nheights |&gt; filter(sex == \"Male\") |&gt; \n  mutate(height = round(height)) |&gt;\n  count(height) |&gt; mutate(f = n / sum(n)) |&gt; \n  ggplot(aes(height, f)) + geom_col()\n\n\n\n\n\n\n\n\nWe can also create a histogram using base R:\n\nwith(heights, hist(height[sex == \"Male\"], breaks = c(50, 55, 60:80, 85)))\n\n\n\n\n\n\n\n\nIf we wanted to use geom_histogram():\n\nheights |&gt; filter(sex == \"Male\") |&gt; ggplot(aes(x = height)) + \n  geom_histogram(breaks = c(50, 55, 60:80, 85), color = \"black\")\n\n\n\n\n\n\n\n\nIf you wanted to display relative frequency:\n\nheights |&gt; filter(sex == \"Male\") |&gt; \n  ggplot(aes(x = height, y = after_stat(density))) + \n  geom_histogram(breaks = c(50, 55, 60:80, 85), color = \"black\")\n\n\n\n\n\n\n\n\n\nIt is important to put genuine consideration into binwidth choice, taking into account important contextual information\n\n\n\n\n\nin practice, we tend to use histograms (with appropriate binwidths) and overlay a smooth curve\nSimilar to histograms, it it important to be conscious of the choice of bandwidth for the smooth curve\ny-axis scaled so that the total area under the smooth curve equals 1\n\n\n\n\n\ndfn: Mode - A value or region where the data are most concentrated, the peak of a distribution\ndfn: Symmetric distribution - has as many data points to both sides of the mode a distribution is skewed if it is asymmetric\ndfn: Tails of a distribution - the regions that extent toward the smallest and largest values\ndfn: Right-skewed (positively skewed) - has a long tail toward larger values\ndfn: Left-skewed (negatively skewed) - has a longer tail toward smaller values\n\n\n\n\n\ngraphical summaries are often complemented by numerical summaries\n\n\n\n\nExercise 1 In the murders dataset, the region is a categorical variable and the following is its distribution: To the closest 5%, what proportion of the states are in the North Central region?\nAnswer: The proportion of states that are in the North Central region is about 25%.\nExercise 2 Which of the following is true:\n\nThe graph above is a histogram.\nThe graph above shows only four numbers with a bar plot.\nCategories are not numbers, so it does not make sense to graph the distribution.\nThe colors, not the height of the bars, describe the distribution.\n\nAnswer: (b). Since the x-axis is categorical and not numeric, this is a bar chart, not a histogram. The graph describes the distributions of the regions with a number (proportion) for each region. Categorical variables can have distributions. Just no.\nExercise 3 The plot below shows the eCDF for male heights: Based on the plot, what percentage of males are shorter than 75 inches?\n\n100%\n95%\n80%\n72 inches\n\nAnswer: (b) 95%.\nExercise 4 To the closest inch, what height \\(m\\) has the property that 1/2 of the male students are taller than \\(m\\) and 1/2 are shorter?\n\n61 inches\n64 inches\n69 inches\n74 inches\n\nAnswer: (c) 69 inches.\nExercise 5 Here is an eCDF of the murder rates (number of murders per 100,000 people) across states in 2010: Knowing that there are 51 observations (50 states and DC) and based on this plot, how many states have murder rates larger than 10 per 100,000 people?\n\n1\n5\n10\n50\n\nAnswer: (a) 1.\nExercise 6 Based on the eCDF above, which of the following statements are true:\n\nAbout half the states have murder rates above 7 per 100,000 and the other half below.\nMost states have murder rates below 2 per 100,000.\nAll the states have murder rates above 2 per 100,000.\nWith the exception of 4 states, the murder rates are below 5 per 100,000.\n\nAnswer: (d) With the exception of 4 states, the murder rates are below 5 per 100,000.\nExercise 7 Below is a histogram of male heights in our heights dataset: Based on this plot, how many males are between 63.5 and 65.5?\n\n10\n24\n47\n100\n\nAnswer: (c) 47.\nExercise 8 About what percentage are shorter than 60 inches?\n\n1%\n10%\n25%\n50%\n\nAnswer: (a) 1%. Could look at the graph, could also run:\n\nlibrary(dplyr)\nheights |&gt; filter(sex == \"Male\") |&gt; summarize(prop = mean(height &lt; 60))\n\n        prop\n1 0.01231527\n\n\nExercise 9 Based on the density plot below, about what proportion of US states have populations larger than 10 million?\n\n0.02\n0.15\n0.50\n0.55\n\nAnswer: (b) 0.15.\nExercise 10 Below are three density plots. Is it possible that they are from the same dataset? Which of the following statements is true:\n\nIt is impossible that they are from the same dataset.\nThey are from the same dataset, but the plots are different due to coding errors.\nThey are the same dataset, but the first and second plot under smooth and the third over smooths.\nThey are the same dataset, but the first is not in the log scale, the second under smooths, and the third over smooths.\n\nAnswer: (d) They are the same dataset, but the first is not in the log scale, the second under smooths, and the third oversmooths.",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#variable-types",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#variable-types",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "variables can be categorical or numeric\n\ncategorical can be ordinal or not\nnumeric can be discrete or continuous\n\nthere can be examples where technically discrete data are treated as continuous",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#relative-frequency-distribution",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#relative-frequency-distribution",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "‘dfn’: distribution - the most basic statistical summary of a list of numbers or categories\n\na compact description of how values are spread across observations.\n\n‘dfn’: list - a collection of observed values, such as a column in a dataset\n\nrelative frequency example:\n\nprop.table(table(state.region))\n\nstate.region\n    Northeast         South North Central          West \n         0.18          0.32          0.24          0.26",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#empirical-cumulative-distribution-functions",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#empirical-cumulative-distribution-functions",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "‘dfn’: empirical cdf - Proportion of data points that are less than or equal to \\(a\\).\n\nhelps to quickly identify medians, ranges, and other important distributional features",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#histograms",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#histograms",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "eCDF not commonly used in practice because it does not easily highlight key distribution characteristics\n\nexample:\n\nlibrary(tidyverse)\nheights |&gt; filter(sex == \"Male\") |&gt; \n  mutate(height = round(height)) |&gt;\n  count(height) |&gt; mutate(f = n / sum(n)) |&gt; \n  ggplot(aes(height, f)) + geom_col()\n\n\n\n\n\n\n\n\nWe can also create a histogram using base R:\n\nwith(heights, hist(height[sex == \"Male\"], breaks = c(50, 55, 60:80, 85)))\n\n\n\n\n\n\n\n\nIf we wanted to use geom_histogram():\n\nheights |&gt; filter(sex == \"Male\") |&gt; ggplot(aes(x = height)) + \n  geom_histogram(breaks = c(50, 55, 60:80, 85), color = \"black\")\n\n\n\n\n\n\n\n\nIf you wanted to display relative frequency:\n\nheights |&gt; filter(sex == \"Male\") |&gt; \n  ggplot(aes(x = height, y = after_stat(density))) + \n  geom_histogram(breaks = c(50, 55, 60:80, 85), color = \"black\")\n\n\n\n\n\n\n\n\n\nIt is important to put genuine consideration into binwidth choice, taking into account important contextual information",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#smoothed-density-plots",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#smoothed-density-plots",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "in practice, we tend to use histograms (with appropriate binwidths) and overlay a smooth curve\nSimilar to histograms, it it important to be conscious of the choice of bandwidth for the smooth curve\ny-axis scaled so that the total area under the smooth curve equals 1",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#describing-distributions",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#describing-distributions",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "dfn: Mode - A value or region where the data are most concentrated, the peak of a distribution\ndfn: Symmetric distribution - has as many data points to both sides of the mode a distribution is skewed if it is asymmetric\ndfn: Tails of a distribution - the regions that extent toward the smallest and largest values\ndfn: Right-skewed (positively skewed) - has a long tail toward larger values\ndfn: Left-skewed (negatively skewed) - has a longer tail toward smaller values",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#visual-to-numerical-summaries",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#visual-to-numerical-summaries",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "graphical summaries are often complemented by numerical summaries",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#exercises",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#exercises",
+    "title": "Section 1: Summary Statistics",
+    "section": "",
+    "text": "Exercise 1 In the murders dataset, the region is a categorical variable and the following is its distribution: To the closest 5%, what proportion of the states are in the North Central region?\nAnswer: The proportion of states that are in the North Central region is about 25%.\nExercise 2 Which of the following is true:\n\nThe graph above is a histogram.\nThe graph above shows only four numbers with a bar plot.\nCategories are not numbers, so it does not make sense to graph the distribution.\nThe colors, not the height of the bars, describe the distribution.\n\nAnswer: (b). Since the x-axis is categorical and not numeric, this is a bar chart, not a histogram. The graph describes the distributions of the regions with a number (proportion) for each region. Categorical variables can have distributions. Just no.\nExercise 3 The plot below shows the eCDF for male heights: Based on the plot, what percentage of males are shorter than 75 inches?\n\n100%\n95%\n80%\n72 inches\n\nAnswer: (b) 95%.\nExercise 4 To the closest inch, what height \\(m\\) has the property that 1/2 of the male students are taller than \\(m\\) and 1/2 are shorter?\n\n61 inches\n64 inches\n69 inches\n74 inches\n\nAnswer: (c) 69 inches.\nExercise 5 Here is an eCDF of the murder rates (number of murders per 100,000 people) across states in 2010: Knowing that there are 51 observations (50 states and DC) and based on this plot, how many states have murder rates larger than 10 per 100,000 people?\n\n1\n5\n10\n50\n\nAnswer: (a) 1.\nExercise 6 Based on the eCDF above, which of the following statements are true:\n\nAbout half the states have murder rates above 7 per 100,000 and the other half below.\nMost states have murder rates below 2 per 100,000.\nAll the states have murder rates above 2 per 100,000.\nWith the exception of 4 states, the murder rates are below 5 per 100,000.\n\nAnswer: (d) With the exception of 4 states, the murder rates are below 5 per 100,000.\nExercise 7 Below is a histogram of male heights in our heights dataset: Based on this plot, how many males are between 63.5 and 65.5?\n\n10\n24\n47\n100\n\nAnswer: (c) 47.\nExercise 8 About what percentage are shorter than 60 inches?\n\n1%\n10%\n25%\n50%\n\nAnswer: (a) 1%. Could look at the graph, could also run:\n\nlibrary(dplyr)\nheights |&gt; filter(sex == \"Male\") |&gt; summarize(prop = mean(height &lt; 60))\n\n        prop\n1 0.01231527\n\n\nExercise 9 Based on the density plot below, about what proportion of US states have populations larger than 10 million?\n\n0.02\n0.15\n0.50\n0.55\n\nAnswer: (b) 0.15.\nExercise 10 Below are three density plots. Is it possible that they are from the same dataset? Which of the following statements is true:\n\nIt is impossible that they are from the same dataset.\nThey are from the same dataset, but the plots are different due to coding errors.\nThey are the same dataset, but the first and second plot under smooth and the third over smooths.\nThey are the same dataset, but the first is not in the log scale, the second under smooths, and the third over smooths.\n\nAnswer: (d) They are the same dataset, but the first is not in the log scale, the second under smooths, and the third oversmooths.",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/sec1_sumstats.html#the-normal-distribution",
+    "href": "textbooks/introduction-to-data-science/sec1_sumstats.html#the-normal-distribution",
+    "title": "Section 1: Summary Statistics",
+    "section": "2.1 - The normal distribution",
+    "text": "2.1 - The normal distribution",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science",
+      "Section 1: Summary Statistics"
+    ]
+  },
+  {
+    "objectID": "leetcode/1_two_sum.html",
+    "href": "leetcode/1_two_sum.html",
+    "title": "LeetCode 1 - Two Sum",
+    "section": "",
+    "text": "link: https://leetcode.com/problems/two-sum/description/\nNote: Original problem “translated” for an R solution using GPT-6.\nDifficulty: Easy",
+    "crumbs": [
+      "LeetCode",
+      "LeetCode 1 - Two Sum"
+    ]
+  },
+  {
+    "objectID": "leetcode/1_two_sum.html#problem-description",
+    "href": "leetcode/1_two_sum.html#problem-description",
+    "title": "LeetCode 1 - Two Sum",
+    "section": "Problem Description",
+    "text": "Problem Description\nYou are given a numeric vector nums containing integers and a number target. Return the indices of two elements whose sum equals target.\nYou may assume that:\n\nEach input has exactly one valid solution.\nYou cannot use the same element twice.\nYou may return the indices in any order.\nIndices should follow R’s 1-based indexing convention.",
+    "crumbs": [
+      "LeetCode",
+      "LeetCode 1 - Two Sum"
+    ]
+  },
+  {
+    "objectID": "leetcode/1_two_sum.html#constraints",
+    "href": "leetcode/1_two_sum.html#constraints",
+    "title": "LeetCode 1 - Two Sum",
+    "section": "Constraints",
+    "text": "Constraints\n\n2 &lt;= length(nums) &lt;= 10^4\n-10^9 &lt;= nums[i] &lt;= 10^9\n-10^9 &lt;= target &lt;= 10^9\nAll elements of nums are whole numbers.\nExactly one valid solution exists.",
+    "crumbs": [
+      "LeetCode",
+      "LeetCode 1 - Two Sum"
+    ]
+  },
+  {
+    "objectID": "leetcode/1_two_sum.html#follow-up",
+    "href": "leetcode/1_two_sum.html#follow-up",
+    "title": "LeetCode 1 - Two Sum",
+    "section": "Follow-up",
+    "text": "Follow-up\nCan you develop an algorithm with a time complexity better than \\(O(n^2)\\), where \\(n\\) is the length of nums?",
+    "crumbs": [
+      "LeetCode",
+      "LeetCode 1 - Two Sum"
+    ]
+  },
+  {
+    "objectID": "leetcode/1_two_sum.html#solution",
+    "href": "leetcode/1_two_sum.html#solution",
+    "title": "LeetCode 1 - Two Sum",
+    "section": "Solution",
+    "text": "Solution\ngoal: give an alg that gives correct indices\nnotes:\n\ntarget - nums[index] will give what we need.\nwhat we need might not be in nums\nmaking the vector tvec - nums (where tvec is a vector of length length(nums) of target)\nshould be linear time\nThen, we have a vector of what we need\ncan use a nested for loop to see if num[i]’s complement is in tvec - nums (with i not equal j)\n\nwhat if we sort before hand?\n\ncan sort in O(nlogn)\nthen when we look for the complement, we can use binary search for it’s complement.\n\nidea: sort nums. make a complement vector. For each i in complement (which will also be sorted), use binary search to see if it’s complement is in the nums.\n\n# I've made a mergsort function, so I'm gonna use it\nlibrary(sortedvector)\n\ntwo_sum &lt;- function(nums, target) {\n  n &lt;- length(nums)\n  sv &lt;- sortedvector(nums)\n  num_sorted &lt;- getVector(sv)\n  comp &lt;- target - num_sorted\n  for (i in 1:n) {\n    temp &lt;- findElement(sv, comp[i])\n    if (is.na(temp)) next\n    # for if both numbers are equal:\n    if (num_sorted[i] == comp[i]) {\n      indices &lt;- which(nums == num_sorted[i])\n      if (length(indices) &gt;= 2) {\n        return(indices[1:2])\n      }\n    } else {\n      # indices in the original vector:\n      index1 &lt;- which(nums == num_sorted[i])[1]\n      index2 &lt;- which(nums == comp[i])[1]\n      return(c(index1, index2))\n    }\n  }\n}\n\n# since we're assuming exactly one unique sol, we don't need to deal with \"no sol\" case\n\nTime complexity\n\nsorteVector uses an implementation of mergesort, so this step is \\(O(n\\log n)\\)\nmaking the target vector is \\(O(n)\\)\nfor loop is \\(O(n)\\)\nbinary search is \\(O(\\log n)\\) and happens at most \\(n\\) times. So, in total, this step is no worse than \\(O(n\\log n)\\)\nfinding the indexes is no worse than \\(O(n)\\) for each\n\nThus, worst case time complexity is \\(T(n) = O(n\\log n)\\).",
+    "crumbs": [
+      "LeetCode",
+      "LeetCode 1 - Two Sum"
+    ]
+  },
+  {
+    "objectID": "leetcode/1_two_sum.html#test-cases",
+    "href": "leetcode/1_two_sum.html#test-cases",
+    "title": "LeetCode 1 - Two Sum",
+    "section": "Test Cases",
+    "text": "Test Cases\nUse the following test cases to evaluate your implementation.\n\n# Test 1\ntwo_sum(c(2, 7, 11, 15), 9)\n\n[1] 1 2\n\n# Expected: c(1, 2)\n\n# Test 2\ntwo_sum(c(3, 2, 4), 6)\n\n[1] 2 3\n\n# Expected: c(2, 3)\n\n# Test 3\ntwo_sum(c(3, 3), 6)\n\n[1] 1 2\n\n# Expected: c(1, 2)",
+    "crumbs": [
+      "LeetCode",
+      "LeetCode 1 - Two Sum"
+    ]
+  },
+  {
+    "objectID": "leetcode/index.html",
+    "href": "leetcode/index.html",
+    "title": "LeetCode",
+    "section": "",
+    "text": "1 — Two Sum",
+    "crumbs": [
+      "LeetCode"
+    ]
+  },
+  {
+    "objectID": "textbooks/index.html",
+    "href": "textbooks/index.html",
+    "title": "Textbooks",
+    "section": "",
+    "text": "Introduction to Data Science",
+    "crumbs": [
+      "Textbooks"
+    ]
+  },
+  {
+    "objectID": "textbooks/introduction-to-data-science/index.html",
+    "href": "textbooks/introduction-to-data-science/index.html",
+    "title": "Introduction to Data Science",
+    "section": "",
+    "text": "Statistics and Prediction Algorithms Through Case Studies — Rafael A. Irizarry\n\nSection 1: Summary Statistics",
+    "crumbs": [
+      "Textbooks",
+      "Introduction to Data Science"
+    ]
+  }
+]
